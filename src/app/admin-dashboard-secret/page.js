@@ -41,9 +41,11 @@ export default function AdminDashboard() {
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY)
       });
-      // Save subscription to Firestore
-      const { addDoc } = await import("firebase/firestore");
-      await addDoc(collection(db, "admin_subscriptions"), JSON.parse(JSON.stringify(subscription)));
+      // Save subscription to Firestore using a hashed endpoint to avoid duplicates
+      const { setDoc, doc } = await import("firebase/firestore");
+      const subObj = JSON.parse(JSON.stringify(subscription));
+      const docId = btoa(subObj.endpoint).replace(/[^a-zA-Z0-9]/g, '').substring(0, 50);
+      await setDoc(doc(db, "admin_subscriptions", docId), subObj);
       
       setIsSubscribed(true);
       alert("Successfully subscribed to notifications!");
