@@ -1,6 +1,5 @@
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import ConditionalLayout from "@/components/ConditionalLayout";
 import Script from "next/script";
 
 export const metadata = {
@@ -39,9 +38,9 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className="is-loading">
-        <Navbar />
-        {children}
-        <Footer />
+        <ConditionalLayout>
+          {children}
+        </ConditionalLayout>
         <Script src="/firebase-db.js" strategy="beforeInteractive" type="module" />
         <Script src="/app.js" strategy="lazyOnload" />
       </body>
