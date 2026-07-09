@@ -319,36 +319,7 @@ async function submitBooking(e) {
     return;
   }
 
-  // --- WhatsApp Background API (Local BuilderBot) ---
-  function sendBackgroundWhatsApp(data) {
-    // 1. Admin Number (Receives booking details)
-    const adminPhone = "918427850271"; 
-    
-    // 2. Customer Number (Receives welcome/confirmation)
-    // Assuming Indian numbers (10 digits). Prepend '91' for WhatsApp.
-    let customerPhone = data.passengerPhone;
-    if (customerPhone.length === 10) {
-      customerPhone = "91" + customerPhone;
-    }
 
-    // Messages
-    const adminMsg = `🚨 *NEW TAXI BOOKING* 🚨\n\n🆔 ID: ${data.bookingId}\n👤 Name: ${data.passengerName}\n📞 Phone: ${data.passengerPhone}\n📍 Pick: ${data.pickupLocation}\n🏁 Drop: ${data.dropLocation}\n📅 Date: ${data.bookingDate} at ${data.bookingTime}\n🚖 Cab: ${data.cabType}\n💰 Fare: ${data.estimatedFare}`;
-    
-    const customerMsg = `Hello ${data.passengerName}! 👋\n\nThank you for booking with Royal Punjab Ride! Your cab (${data.cabType}) is confirmed for ${data.bookingDate} at ${data.bookingTime}.\n\n📍 From: ${data.pickupLocation}\n🏁 To: ${data.dropLocation}\n\nOur driver will contact you shortly! 🚖`;
-
-    // Helper function to send message via local bot
-    const sendMessage = (number, text) => {
-      fetch('/api/bot/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ number: number, message: text })
-      }).catch(err => console.error("WhatsApp Error:", err));
-    };
-
-    // Send both messages
-    sendMessage(adminPhone, adminMsg);
-    sendMessage(customerPhone, customerMsg);
-  }
 
   // Success UI Update
   document.getElementById('modalMessage').textContent =
@@ -369,8 +340,7 @@ async function submitBooking(e) {
   btn.innerHTML = originalBtnHTML;
   btn.disabled = false;
 
-  // Send background WhatsApp notification silently
-  sendBackgroundWhatsApp(bookingData);
+
 
   // Reset form
   document.getElementById('bookingForm').reset();

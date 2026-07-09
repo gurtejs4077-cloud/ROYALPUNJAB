@@ -15,7 +15,7 @@ export default function PrivacyPolicyPage() {
             <h3>1. Information We Collect</h3>
             <p>We collect your name, phone number, email address, and pickup/drop-off locations when you make a booking.</p>
             <h3>2. How We Use Your Data</h3>
-            <p>Your data is strictly used to fulfill your taxi booking, send you notifications (via WhatsApp/SMS), and improve our services.</p>
+            <p>Your data is strictly used to fulfill your taxi booking, send you notifications (via SMS), and improve our services.</p>
             <h3>3. Data Protection</h3>
             <p>We do not sell or share your personal information with third parties, except as required to fulfill your booking (e.g., sharing your number with your assigned driver).</p>
           </div>
