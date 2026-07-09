@@ -109,8 +109,7 @@ export default function AdminDashboard() {
                     <th style={{ padding: "16px", color: "rgba(255,255,255,0.5)", fontWeight: "500", fontSize: "13px", textTransform: "uppercase" }}>Route</th>
                     <th style={{ padding: "16px", color: "rgba(255,255,255,0.5)", fontWeight: "500", fontSize: "13px", textTransform: "uppercase" }}>Date & Time</th>
                     <th style={{ padding: "16px", color: "rgba(255,255,255,0.5)", fontWeight: "500", fontSize: "13px", textTransform: "uppercase" }}>Cab</th>
-                    <th style={{ padding: "16px", color: "rgba(255,255,255,0.5)", fontWeight: "500", fontSize: "13px", textTransform: "uppercase" }}>Fare</th>
-                    <th style={{ padding: "16px", color: "rgba(255,255,255,0.5)", fontWeight: "500", fontSize: "13px", textTransform: "uppercase" }}>Status</th>
+                    <th style={{ padding: "16px", color: "rgba(255,255,255,0.5)", fontWeight: "500", fontSize: "13px", textTransform: "uppercase" }}>Contact</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -133,28 +132,34 @@ export default function AdminDashboard() {
                         <span style={{ background: "rgba(255,255,255,0.1)", padding: "4px 8px", borderRadius: "4px", fontSize: "12px" }}>{b.cabType}</span>
                         <div style={{ color: "rgba(255,255,255,0.5)", fontSize: "12px", marginTop: "4px", textTransform: "capitalize" }}>{b.tripType}</div>
                       </td>
-                      <td style={{ padding: "16px", fontWeight: "600", color: "#25D366" }}>{b.estimatedFare}</td>
                       <td style={{ padding: "16px" }}>
-                        <select 
-                          value={b.status || "Pending"}
-                          onChange={(e) => updateStatus(b.id, b.status, e.target.value)}
+                        <a 
+                          href={`https://wa.me/91${b.passengerPhone?.replace(/[^0-9]/g, '')}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
                           style={{
-                            background: b.status === "Confirmed" ? "rgba(37, 211, 102, 0.1)" : b.status === "Completed" ? "rgba(255, 255, 255, 0.1)" : b.status === "Cancelled" ? "rgba(239, 68, 68, 0.1)" : "rgba(244, 67, 145, 0.1)",
-                            color: b.status === "Confirmed" ? "#25D366" : b.status === "Completed" ? "white" : b.status === "Cancelled" ? "#EF4444" : "#F44391",
+                            background: "rgba(37, 211, 102, 0.1)",
+                            color: "#25D366",
                             border: "1px solid currentColor",
-                            padding: "6px 12px",
+                            padding: "8px 16px",
                             borderRadius: "100px",
                             fontSize: "13px",
                             fontWeight: "600",
-                            outline: "none",
-                            cursor: "pointer"
+                            textDecoration: "none",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "6px",
+                            transition: "opacity 0.2s"
                           }}
+                          onMouseOver={e => e.currentTarget.style.opacity = 0.8}
+                          onMouseOut={e => e.currentTarget.style.opacity = 1}
                         >
-                          <option value="Pending" style={{ background: "#0B0C10", color: "white" }}>⏳ Pending</option>
-                          <option value="Confirmed" style={{ background: "#0B0C10", color: "white" }}>✅ Confirmed</option>
-                          <option value="Completed" style={{ background: "#0B0C10", color: "white" }}>🏁 Completed</option>
-                          <option value="Cancelled" style={{ background: "#0B0C10", color: "white" }}>❌ Cancelled</option>
-                        </select>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M12.01 2.012c-5.506 0-9.974 4.465-9.974 9.97 0 1.761.458 3.483 1.332 5.002L2.012 22l5.166-1.353c1.457.805 3.109 1.229 4.832 1.229 5.507 0 9.975-4.464 9.975-9.97 0-5.505-4.468-9.97-9.975-9.97" fill="#25D366"/>
+                            <path d="M16.48 13.52c-.22-.11-1.312-.647-1.516-.721-.203-.075-.353-.11-.5.11-.15.22-.572.72-.7.868-.13.148-.26.166-.48.055-.22-.11-1.026-.379-1.954-1.207-.723-.644-1.21-1.442-1.352-1.662-.14-.22-.015-.339.096-.449.1-.1.22-.258.33-.388.11-.13.146-.22.22-.367.074-.148.037-.277-.018-.387-.055-.11-.5-1.207-.685-1.654-.18-.435-.363-.377-.5-.383-.13-.006-.279-.006-.427-.006-.148 0-.39.055-.595.276-.204.22-.782.766-.782 1.868s.8 2.164.912 2.31c.11.148 1.576 2.408 3.818 3.376.533.232.95.37 1.275.474.536.171 1.023.146 1.408.089.432-.065 1.312-.536 1.497-1.054.185-.518.185-.96.13-1.054-.055-.094-.204-.15-.424-.26z" fill="#FFF"/>
+                          </svg>
+                          WhatsApp
+                        </a>
                       </td>
                     </tr>
                   ))}
