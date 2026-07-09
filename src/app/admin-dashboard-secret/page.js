@@ -10,8 +10,38 @@ export default function AdminDashboard() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   const SECRET_PIN = "ROYAL2025";
+
+  const subscribeToPush = async () => {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      alert("Push notifications are not supported by your browser.");
+      return;
+    }
+    try {
+      const registration = await navigator.serviceWorker.register('/sw.js');
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        alert("Permission not granted for notifications");
+        return;
+      }
+      // Assuming NEXT_PUBLIC_VAPID_PUBLIC_KEY is available
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
+      });
+      // Save subscription to Firestore
+      const { addDoc } = await import("firebase/firestore");
+      await addDoc(collection(db, "admin_subscriptions"), JSON.parse(JSON.stringify(subscription)));
+      
+      setIsSubscribed(true);
+      alert("Successfully subscribed to notifications!");
+    } catch (err) {
+      console.error("Failed to subscribe:", err);
+      alert("Failed to subscribe to notifications: " + err.message);
+    }
+  };
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -87,9 +117,14 @@ export default function AdminDashboard() {
             <h1 style={{ fontSize: "32px", fontWeight: "bold", background: "linear-gradient(90deg, #F44391 0%, #FF8C00 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Royal Punjab Admin</h1>
             <p style={{ color: "rgba(255,255,255,0.5)", marginTop: "8px" }}>Manage all your taxi bookings in one place.</p>
           </div>
-          <button onClick={() => fetchBookings()} style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", padding: "10px 20px", borderRadius: "8px", color: "white", cursor: "pointer" }}>
-            Refresh Data
-          </button>
+          <div style={{ display: "flex", gap: "12px" }}>
+            <button onClick={subscribeToPush} disabled={isSubscribed} style={{ background: isSubscribed ? "rgba(37, 211, 102, 0.2)" : "rgba(244, 67, 145, 0.2)", border: `1px solid ${isSubscribed ? "#25D366" : "#F44391"}`, padding: "10px 20px", borderRadius: "8px", color: isSubscribed ? "#25D366" : "#F44391", cursor: isSubscribed ? "default" : "pointer", fontWeight: "600" }}>
+              {isSubscribed ? "✅ Notifications Enabled" : "🔔 Enable Notifications"}
+            </button>
+            <button onClick={() => fetchBookings()} style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", padding: "10px 20px", borderRadius: "8px", color: "white", cursor: "pointer" }}>
+              Refresh Data
+            </button>
+          </div>
         </div>
 
         {loading ? (
