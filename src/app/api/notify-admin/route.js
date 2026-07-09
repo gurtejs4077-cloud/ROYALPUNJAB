@@ -36,9 +36,10 @@ export async function POST(req) {
       });
     });
 
-    await Promise.all(sendPromises);
+    const results = await Promise.allSettled(sendPromises);
+    console.log("Push send results:", results);
 
-    return NextResponse.json({ success: true, message: "Notifications sent!" });
+    return NextResponse.json({ success: true, message: "Notifications sent!", results });
   } catch (error) {
     console.error('Error in notify-admin:', error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

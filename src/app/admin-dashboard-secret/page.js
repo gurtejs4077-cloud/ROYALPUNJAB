@@ -26,10 +26,20 @@ export default function AdminDashboard() {
         alert("Permission not granted for notifications");
         return;
       }
-      // Assuming NEXT_PUBLIC_VAPID_PUBLIC_KEY is available
+      const urlBase64ToUint8Array = (base64String) => {
+        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+        for (let i = 0; i < rawData.length; ++i) {
+          outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+      };
+
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
+        applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY)
       });
       // Save subscription to Firestore
       const { addDoc } = await import("firebase/firestore");
@@ -70,6 +80,32 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const testPush = async () => {
+    try {
+      const res = await fetch('/api/notify-admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ passengerName: 'Test Admin', pickupLocation: 'Local', dropLocation: 'Test' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast("Push trigger sent successfully! Check your PC notifications.");
+      } else {
+        alert("Failed to send push: " + data.error);
+      }
+    } catch (err) {
+      alert("Error: " + err.message);
+    }
+  };
+
+  const showToast = (msg) => {
+    const t = document.createElement("div");
+    t.textContent = msg;
+    t.style.cssText = "position:fixed;bottom:20px;right:20px;background:#25D366;color:white;padding:12px 24px;border-radius:8px;z-index:9999;";
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 3000);
   };
 
   const updateStatus = async (id, currentStatus, newStatus) => {
@@ -120,6 +156,9 @@ export default function AdminDashboard() {
           <div style={{ display: "flex", gap: "12px" }}>
             <button onClick={subscribeToPush} disabled={isSubscribed} style={{ background: isSubscribed ? "rgba(37, 211, 102, 0.2)" : "rgba(244, 67, 145, 0.2)", border: `1px solid ${isSubscribed ? "#25D366" : "#F44391"}`, padding: "10px 20px", borderRadius: "8px", color: isSubscribed ? "#25D366" : "#F44391", cursor: isSubscribed ? "default" : "pointer", fontWeight: "600" }}>
               {isSubscribed ? "✅ Notifications Enabled" : "🔔 Enable Notifications"}
+            </button>
+            <button onClick={testPush} style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", padding: "10px 20px", borderRadius: "8px", color: "white", cursor: "pointer" }}>
+              🧪 Test Push
             </button>
             <button onClick={() => fetchBookings()} style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", padding: "10px 20px", borderRadius: "8px", color: "white", cursor: "pointer" }}>
               Refresh Data

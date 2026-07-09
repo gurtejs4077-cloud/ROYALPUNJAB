@@ -1,24 +1,27 @@
 self.addEventListener('push', function(event) {
+  console.log("Push event received!");
   let data = {};
   if (event.data) {
     try {
       data = event.data.json();
+      console.log("Push data:", data);
     } catch (e) {
       data = { title: 'New Alert', body: event.data.text() };
+      console.log("Push text:", data);
     }
   }
 
   const title = data.title || 'Royal Punjab Ride';
   const options = {
     body: data.body || 'You have a new notification.',
-    icon: '/favicon.ico',
-    badge: '/favicon.ico',
     vibrate: [200, 100, 200, 100, 200, 100, 200],
     data: data.url || '/'
   };
 
   event.waitUntil(
     self.registration.showNotification(title, options)
+      .then(() => console.log("Notification shown successfully"))
+      .catch(err => console.error("Error showing notification:", err))
   );
 });
 
