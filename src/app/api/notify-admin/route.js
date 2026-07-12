@@ -23,7 +23,7 @@ export async function POST(req) {
 
         const mailOptions = {
           from: process.env.EMAIL_USER,
-          to: 'royalaps@yahoo.co.in',
+          to: 'gurtejsaini.1.0.0.1@gmail.com, royalaps9815316271@gmail.com',
           subject: `🚨 New Taxi Booking: ${data.passengerName}`,
           text: `
 New Taxi Booking Received!
