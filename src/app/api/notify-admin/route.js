@@ -4,11 +4,11 @@ import nodemailer from 'nodemailer';
 export async function POST(req) {
   try {
     const data = await req.json();
-    
+
     const host = req.headers.get("host") || "punjabride.com";
     const protocol = host.includes("localhost") ? "http" : "https";
     const adminLink = `${protocol}://${host}/admin-dashboard-secret?pin=ROYAL2025`;
-    
+
     // --- 1. SEND EMAIL NOTIFICATION ---
     let emailStatus = 'skipped';
     try {
@@ -23,7 +23,7 @@ export async function POST(req) {
 
         const mailOptions = {
           from: process.env.EMAIL_USER,
-          to: 'gurtejsaini.1.0.0.1@gmail.com, royalaps9815316271@gmail.com',
+          to: process.env.ADMIN_EMAILS || 'gurtejsaini.1.0.0.1@gmail.com, royalaps9815316271@gmail.com',
           subject: `🚨 New Taxi Booking: ${data.passengerName}`,
           text: `
 New Taxi Booking Received!
