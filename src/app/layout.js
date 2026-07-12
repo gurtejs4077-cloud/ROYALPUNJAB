@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
               ],
               "description": "Premium taxi and cab booking service in Punjab, offering city rides, airport transfers, and outstation cabs.",
               "url": "https://punjabride.com",
-              "telephone": "+91-1800-000-000",
+              "telephone": "+91-98153-16271",
               "priceRange": "$$"
             })
           }}
@@ -42,7 +42,7 @@ export default function RootLayout({ children }) {
           {children}
         </ConditionalLayout>
         <Script src="/firebase-db.js" strategy="beforeInteractive" type="module" />
-        <Script src="/app.js" strategy="lazyOnload" />
+        <Script src="/app.js" strategy="beforeInteractive" />
       </body>
     </html>
   );

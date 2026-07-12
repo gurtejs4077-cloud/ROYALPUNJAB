@@ -10,50 +10,21 @@ export default function AdminDashboard() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [isSubscribed, setIsSubscribed] = useState(false);
 
   const SECRET_PIN = "ROYAL2025";
 
-  const subscribeToPush = async () => {
-    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-      alert("Push notifications are not supported by your browser.");
-      return;
-    }
-    try {
-      const registration = await navigator.serviceWorker.register('/sw.js');
-      const permission = await Notification.requestPermission();
-      if (permission !== 'granted') {
-        alert("Permission not granted for notifications");
-        return;
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("pin") === SECRET_PIN) {
+        setIsAuthenticated(true);
+        fetchBookings();
+        // Remove pin from URL for security
+        window.history.replaceState({}, document.title, window.location.pathname);
       }
-      const urlBase64ToUint8Array = (base64String) => {
-        const padding = '='.repeat((4 - base64String.length % 4) % 4);
-        const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
-        const rawData = window.atob(base64);
-        const outputArray = new Uint8Array(rawData.length);
-        for (let i = 0; i < rawData.length; ++i) {
-          outputArray[i] = rawData.charCodeAt(i);
-        }
-        return outputArray;
-      };
-
-      const subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY)
-      });
-      // Save subscription to Firestore using a hashed endpoint to avoid duplicates
-      const { setDoc, doc } = await import("firebase/firestore");
-      const subObj = JSON.parse(JSON.stringify(subscription));
-      const docId = btoa(subObj.endpoint).replace(/[^a-zA-Z0-9]/g, '').substring(0, 50);
-      await setDoc(doc(db, "admin_subscriptions", docId), subObj);
-      
-      setIsSubscribed(true);
-      alert("Successfully subscribed to notifications!");
-    } catch (err) {
-      console.error("Failed to subscribe:", err);
-      alert("Failed to subscribe to notifications: " + err.message);
     }
-  };
+  }, []);
+
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -84,23 +55,6 @@ export default function AdminDashboard() {
     }
   };
 
-  const testPush = async () => {
-    try {
-      const res = await fetch('/api/notify-admin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ passengerName: 'Test Admin', pickupLocation: 'Local', dropLocation: 'Test' })
-      });
-      const data = await res.json();
-      if (data.success) {
-        showToast("Push trigger sent successfully! Check your PC notifications.");
-      } else {
-        alert("Failed to send push: " + data.error);
-      }
-    } catch (err) {
-      alert("Error: " + err.message);
-    }
-  };
 
   const showToast = (msg) => {
     const t = document.createElement("div");
@@ -156,12 +110,6 @@ export default function AdminDashboard() {
             <p style={{ color: "rgba(255,255,255,0.5)", marginTop: "8px" }}>Manage all your taxi bookings in one place.</p>
           </div>
           <div style={{ display: "flex", gap: "12px" }}>
-            <button onClick={subscribeToPush} disabled={isSubscribed} style={{ background: isSubscribed ? "rgba(37, 211, 102, 0.2)" : "rgba(244, 67, 145, 0.2)", border: `1px solid ${isSubscribed ? "#25D366" : "#F44391"}`, padding: "10px 20px", borderRadius: "8px", color: isSubscribed ? "#25D366" : "#F44391", cursor: isSubscribed ? "default" : "pointer", fontWeight: "600" }}>
-              {isSubscribed ? "✅ Notifications Enabled" : "🔔 Enable Notifications"}
-            </button>
-            <button onClick={testPush} style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", padding: "10px 20px", borderRadius: "8px", color: "white", cursor: "pointer" }}>
-              🧪 Test Push
-            </button>
             <button onClick={() => fetchBookings()} style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", padding: "10px 20px", borderRadius: "8px", color: "white", cursor: "pointer" }}>
               Refresh Data
             </button>

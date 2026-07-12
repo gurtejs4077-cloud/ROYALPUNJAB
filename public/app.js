@@ -11,13 +11,13 @@ const state = {
 };
 
 /* ===== NAVBAR SCROLL ===== */
-const navbar = document.getElementById('navbar');
 window.addEventListener('scroll', () => {
-  navbar.classList.toggle('scrolled', window.scrollY > 60);
+  const navbar = document.getElementById('navbar');
+  if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 60);
 
   // Sticky CTA: show after hero
   const stickyCta = document.getElementById('stickyCta');
-  stickyCta.style.display = window.scrollY > window.innerHeight * 0.8 ? 'block' : 'none';
+  if (stickyCta) stickyCta.style.display = window.scrollY > window.innerHeight * 0.8 ? 'block' : 'none';
 
   // Active nav link highlight
   const sections = ['home', 'booking', 'services', 'fleet', 'about', 'contact'];
@@ -61,10 +61,10 @@ function setTripType(type) {
 
   // Show/hide Airport UI
   const airportUI = document.getElementById('airportUI');
-  const pickupContainer = document.getElementById('pickupContainer');
-  const dropoffContainer = document.getElementById('dropoffContainer');
   const pickupInput = document.getElementById('pickup');
   const dropoffInput = document.getElementById('dropoff');
+  const pickupContainer = pickupInput ? pickupInput.closest('.form-group') : null;
+  const dropoffContainer = dropoffInput ? dropoffInput.closest('.form-group') : null;
 
   if (airportUI) {
     if (type === 'airport') {
@@ -72,10 +72,10 @@ function setTripType(type) {
       toggleAirportDir(); // Initialize the visibility and required logic
     } else {
       airportUI.style.display = 'none';
-      pickupContainer.style.display = 'block';
-      dropoffContainer.style.display = 'block';
-      pickupInput.required = true;
-      dropoffInput.required = true;
+      if(pickupContainer) pickupContainer.style.display = 'block';
+      if(dropoffContainer) dropoffContainer.style.display = 'block';
+      if(pickupInput) pickupInput.required = true;
+      if(dropoffInput) dropoffInput.required = true;
     }
   }
 
@@ -92,35 +92,35 @@ function toggleAirportDir() {
   if (!dirRadio) return;
   const dir = dirRadio.value;
   
-  const pickupContainer = document.getElementById('pickupContainer');
-  const dropoffContainer = document.getElementById('dropoffContainer');
   const pickupInput = document.getElementById('pickup');
   const dropoffInput = document.getElementById('dropoff');
+  const pickupContainer = pickupInput ? pickupInput.closest('.form-group') : null;
+  const dropoffContainer = dropoffInput ? dropoffInput.closest('.form-group') : null;
   const airportSelect = document.getElementById('airportSelect');
 
   if (dir === 'to') {
-    pickupContainer.style.display = 'block';
-    dropoffContainer.style.display = 'none';
+    if(pickupContainer) pickupContainer.style.display = 'block';
+    if(dropoffContainer) dropoffContainer.style.display = 'none';
     
-    pickupInput.required = true;
-    dropoffInput.required = false; // Prevent form validation error on hidden field
-    dropoffInput.value = airportSelect.value;
+    if(pickupInput) pickupInput.required = true;
+    if(dropoffInput) dropoffInput.required = false; // Prevent form validation error on hidden field
+    if(dropoffInput && airportSelect) dropoffInput.value = airportSelect.value;
 
     // Clear pickup field if it was previously set to an airport
-    const isPickupAirport = Array.from(airportSelect.options).some(opt => opt.value === pickupInput.value);
-    if (isPickupAirport) pickupInput.value = '';
+    const isPickupAirport = airportSelect ? Array.from(airportSelect.options).some(opt => opt.value === pickupInput?.value) : false;
+    if (isPickupAirport && pickupInput) pickupInput.value = '';
 
   } else {
-    pickupContainer.style.display = 'none';
-    dropoffContainer.style.display = 'block';
+    if(pickupContainer) pickupContainer.style.display = 'none';
+    if(dropoffContainer) dropoffContainer.style.display = 'block';
     
-    pickupInput.required = false; // Prevent form validation error on hidden field
-    dropoffInput.required = true;
-    pickupInput.value = airportSelect.value;
+    if(pickupInput) pickupInput.required = false;
+    if(dropoffInput) dropoffInput.required = true;
+    if(pickupInput && airportSelect) pickupInput.value = airportSelect.value;
 
     // Clear dropoff field if it was previously set to an airport
-    const isDropoffAirport = Array.from(airportSelect.options).some(opt => opt.value === dropoffInput.value);
-    if (isDropoffAirport) dropoffInput.value = '';
+    const isDropoffAirport = airportSelect ? Array.from(airportSelect.options).some(opt => opt.value === dropoffInput?.value) : false;
+    if (isDropoffAirport && dropoffInput) dropoffInput.value = '';
   }
   
   updateFareEstimate();
@@ -130,8 +130,12 @@ function toggleAirportDir() {
 function selectCab(cabType) {
   state.selectedCab = cabType;
 
-  document.querySelectorAll('.glass-vehicles button').forEach(card => card.classList.remove('active'));
-  document.getElementById(`cab-${cabType}`).classList.add('active');
+  let radioValue = '5';
+  if (cabType === 'seater7') radioValue = '7';
+  if (cabType === 'luxury') radioValue = 'luxury';
+  
+  const radio = document.querySelector(`input[name="vehicle"][value="${radioValue}"]`);
+  if (radio) radio.checked = true;
 
   updateFareEstimate();
   showToast(`🚖 ${cabType.charAt(0).toUpperCase() + cabType.slice(1)} selected!`);
@@ -351,8 +355,7 @@ async function submitBooking(e) {
   // Reset form
   document.getElementById('bookingForm').reset();
   setDefaultDateTime();
-  document.querySelectorAll('.glass-vehicles button').forEach(c => c.classList.remove('active'));
-  document.getElementById('cab-seater5').classList.add('active');
+  selectCab('seater5');
   state.selectedCab = 'seater5';
   document.getElementById('fareEstimate').style.display = 'none';
 }

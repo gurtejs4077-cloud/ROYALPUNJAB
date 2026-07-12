@@ -320,8 +320,8 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div style="text-align: center; margin-top: 25px; font-size: 0.95rem; color: var(--text-muted); padding: 0 15px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.5;">
-        <em>* Please note: Prices may vary according to long distances, specific routes, or the number of days for long trips.</em>
+      <div style="text-align: center; margin-top: 30px; padding: 16px 20px; max-width: 650px; margin-left: auto; margin-right: auto; line-height: 1.6; background: rgba(196, 176, 135, 0.25); border: 2px solid #C4B087; border-radius: 12px; box-shadow: 0 4px 12px rgba(196, 176, 135, 0.15);">
+        <strong style="color: #111; font-size: 1.05rem; font-weight: 900; letter-spacing: 0.02em;">* Please note: Prices may vary according to long distances, specific routes, or the number of days for long trips.</strong>
       </div>
     </div>
   </section>

@@ -1011,7 +1011,7 @@ img { max-width: 100%; display: block; }
   .hero-bottom-labels { display: none; }
   .hero-side-text { display: none; }
 
-  .form-row { grid-template-columns: 1fr; gap: 12px; } /* Stack vertically to prevent horizontal overflow */
+  .form-row { grid-template-columns: 1fr; gap: 12px; }
   .cab-cards { grid-template-columns: repeat(2,1fr); }
   .services-grid { grid-template-columns: 1fr; }
   .fleet-grid { grid-template-columns: 1fr 1fr; }
@@ -1020,48 +1020,138 @@ img { max-width: 100%; display: block; }
   .step-arrow { transform: rotate(90deg); text-align: center; margin: 10px 0; }
   .testimonials-grid { grid-template-columns: 1fr; }
   .contact-grid { grid-template-columns: 1fr; }
+  
+  /* Sticky CTA */
   .sticky-cta { display: block; }
   body { padding-bottom: 80px; }
-  .trip-type-tabs { flex-wrap: nowrap; overflow-x: auto; }
   
+  /* Trip type tabs */
+  .trip-type-tabs { flex-wrap: nowrap; overflow-x: auto; }
   .booking-form { padding: 20px 16px; }
   .booking-header { padding: 24px 16px 0; }
 
-  .glass-vehicles button { font-size: 1rem; padding: 8px 0; border-radius: 8px; }
-  .glass-vehicles button span { font-size: 0.65rem; }
-
+  /* Hero */
   .royal-hero {
     height: auto;
-    min-height: 100vh;
-    padding: 80px 20px 40px; /* Reduced from 100px */
+    min-height: 100dvh;
+    padding: 80px 16px 32px;
   }
-  .hero-huge-title { font-size: clamp(2rem, 8vw, 2.5rem); margin-bottom: 16px; white-space: nowrap; }
+  .hero-content-wrapper {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 24px;
+    padding-top: 16px;
+  }
+  .hero-title-section { text-align: center; width: 100%; }
+  .royal-divider { justify-content: center; }
+  .hero-huge-title { 
+    font-size: clamp(1.9rem, 7.5vw, 2.4rem); 
+    margin-bottom: 12px; 
+    white-space: normal; 
+    word-wrap: break-word; 
+    letter-spacing: -0.01em;
+  }
+  .punjabi-accent { font-size: 1.8rem; }
+  .hero-subtitle { font-size: 1rem; }
   
-  /* Make form more compact horizontally and vertically */
+  /* Glass form on mobile */
   .glass-card { padding: 20px 16px; border-radius: 20px; }
   .royal-glass-form { 
     flex-basis: auto; 
     width: 100%; 
-    max-width: 360px; /* Force it to be compact horizontally */
+    max-width: 100%;
     margin: 0 auto; 
   }
+  .glass-header h2 { font-size: 1.3rem; margin-bottom: 14px; }
+  .glass-tabs { margin-bottom: 14px; padding: 4px; }
+  .glass-tabs span { padding: 7px 0; font-size: 0.72rem; }
+  .input-group { margin-bottom: 10px; }
+  .glass-input { padding: 11px 11px 11px 34px; font-size: 0.85rem; border-radius: 8px; }
+  .input-icon { left: 10px; font-size: 0.95rem; }
+  .glass-submit { padding: 13px; font-size: 0.88rem; border-radius: 8px; }
   
-  .glass-header h2 { font-size: 1.4rem; margin-bottom: 16px; }
-  .glass-tabs { margin-bottom: 16px; padding: 4px; }
-  .glass-tabs span { padding: 8px 0; font-size: 0.75rem; }
-  .input-group { margin-bottom: 12px; }
-  .glass-input { padding: 12px 12px 12px 36px; font-size: 0.85rem; border-radius: 8px; }
-  .input-icon { left: 12px; font-size: 1rem; }
-  .glass-submit { padding: 14px; font-size: 0.9rem; border-radius: 8px; }
+  /* Glass form grid row (date/time) — stack on mobile */
+  .royal-glass-form .grid-row {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+
+  /* Vehicle switcher — ensure all 3 options are visible */
+  .royal-glass-form .switcher {
+    height: 44px;
+    padding: 4px 5px;
+  }
+  .royal-glass-form .switcher__text {
+    font-size: 10px;
+    letter-spacing: 0.03em;
+  }
   
+  /* Input wrapper height */
+  .royal-glass-form .input-wrapper {
+    height: 46px !important;
+    padding: 0 12px !important;
+  }
+  
+  /* Submit button */
+  .royal-glass-form .submit-btn {
+    height: 50px;
+    font-size: 12px;
+  }
+
+  /* Floating complaint button — move above sticky CTA, smaller on mobile */
+  .floating-complaint-btn {
+    bottom: 90px;
+    left: 16px;
+    height: 36px;
+    padding: 0 12px;
+    font-size: 0.72rem;
+    gap: 5px;
+    border-radius: 18px;
+  }
+  .floating-complaint-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
   .section-title { font-size: 2rem; }
   .container { padding: 0 16px; }
+  
+  /* Airport UI */
+  #airportUI { margin-bottom: 12px; }
+
+  /* Fare estimate */
+  .r-fare { font-size: 0.82rem; padding: 8px 12px; }
 }
 
 @media (max-width: 480px) {
   .fleet-grid { grid-template-columns: 1fr; }
   .cab-cards { grid-template-columns: repeat(2,1fr); }
+  
+  .hero-huge-title { font-size: clamp(1.7rem, 7vw, 2rem); }
+  .punjabi-accent { font-size: 1.6rem; }
+  
+  /* On very small screens stack date + time */
+  .royal-glass-form .grid-row {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Complaint button even smaller screens */
+  .floating-complaint-btn {
+    bottom: 88px;
+    left: 12px;
+    font-size: 0.78rem;
+    padding: 0 12px;
+    height: 40px;
+  }
+
+  /* Testimonials single col */
+  .testimonials-grid { grid-template-columns: 1fr; }
+  
+  /* Navbar logo */
+  .nav-logo-center .logo-text { font-size: 1rem; }
 }
+
 
 /* ===================== ROYAL GLASS FORM ===================== */
 .royal-glass-form {
