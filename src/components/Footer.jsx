@@ -26,7 +26,7 @@ export default function Footer() {
               <div className="contact-item">
                 <div>
                   <strong>Email</strong>
-                  <a href="mailto:royalaps@yahoo.com">royalaps@yahoo.com</a>
+                  <a href="mailto:royalaps9815316271@gmail.com">royalaps9815316271@gmail.com</a>
                 </div>
               </div>
               <div className="contact-item">

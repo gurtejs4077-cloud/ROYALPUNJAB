@@ -20,7 +20,7 @@ export default function CorporateTieUpPage() {
               <li>Priority Booking & 100% Fulfillment</li>
               <li>GST Invoices</li>
             </ul>
-            <a href="mailto:royalaps@yahoo.com" className="btn-primary" style="display: inline-block; padding: 15px 30px; font-size: 1.2rem;">Email Us for Tie-ups</a>
+            <a href="mailto:royalaps9815316271@gmail.com" className="btn-primary" style="display: inline-block; padding: 15px 30px; font-size: 1.2rem;">Email Us for Tie-ups</a>
           </div>
         </div>
       </section>
